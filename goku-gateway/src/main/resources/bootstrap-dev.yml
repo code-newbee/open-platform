@@ -1,0 +1,42 @@
+server:
+  port: 7001
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: goku-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: http://127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true    #启用自动根据服务id生成路由
+          lower-case-service-id: true   #设置路由的路径为小写的服务id
+      routes:
+        - id: goku-admin
+          uri: lb://goku-admin
+          predicates:
+            - Path=/goku-admin/**
+          filters:
+            - StripPrefix=1
+        - id: lcloud-van-auth
+          uri: lb://lcloud-van-auth
+          predicates:
+            - Path=/lcloud-van-auth/**
+          filters:
+            - StripPrefix=1
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          #验签公钥的请求路径
+          jwk-set-uri: http://localhost:8888/oauth/public_key
+
+# 配置白名单路径
+white-list:
+  urls:
+    - "/lcloud-van-auth/oauth/token"
+    - "/lcloud-van-auth/oauth/public_key"
