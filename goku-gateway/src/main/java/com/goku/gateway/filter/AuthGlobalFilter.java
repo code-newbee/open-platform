@@ -8,6 +8,7 @@ import lcloud.van.core.constants.AuthConstants;
 import lcloud.van.core.result.Result;
 import lcloud.van.core.result.ResultCodeEnum;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -20,17 +21,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.Charset;
 
 /**
- * 功能描述：
- *
- * @Author: XKK
- * @Date: 2021/6/2 17:09
+ * 黑名单token过滤器
  */
+@Component
+@Slf4j
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
     @Autowired
@@ -40,7 +41,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String token = exchange.getRequest().getHeaders().getFirst(AuthConstants.JWT_TOKEN_HEADER);
-        if (StrUtil.isBlank(token)) {
+        if (StrUtil.isBlank(token) || token.startsWith("Basic")) {
             return chain.filter(exchange);
         }
         token = token.replace(AuthConstants.JWT_TOKEN_PREFIX, Strings.EMPTY);

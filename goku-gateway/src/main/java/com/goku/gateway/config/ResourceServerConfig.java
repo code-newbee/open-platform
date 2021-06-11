@@ -2,6 +2,7 @@ package com.goku.gateway.config;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.json.JSONUtil;
+import com.goku.gateway.security.AuthorizationManager;
 import lcloud.van.core.constants.AuthConstants;
 import lcloud.van.core.result.Result;
 import lcloud.van.core.result.ResultCodeEnum;
@@ -33,14 +34,11 @@ import java.nio.charset.Charset;
  */
 @AllArgsConstructor
 @Configuration
-// 注解需要使用@EnableWebFluxSecurity而非@EnableWebSecurity,因为SpringCloud Gateway基于WebFlux
 @EnableWebFluxSecurity
 public class ResourceServerConfig {
 
     private AuthorizationManager authorizationManager;
-
     private WhiteListConfig whiteListConfig;
-
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -105,8 +103,11 @@ public class ResourceServerConfig {
         };
     }
 
+
+
     /**
-     * @linkhttps://blog.csdn.net/qq_24230139/article/details/105091273
+     * @return
+     * @link https://blog.csdn.net/qq_24230139/article/details/105091273
      * ServerHttpSecurity没有将jwt中authorities的负载部分当做Authentication
      * 需要把jwt的Claim中的authorities加入
      * 方案：重新定义ReactiveAuthenticationManager权限管理器，默认转换器JwtGrantedAuthoritiesConverter
@@ -121,7 +122,4 @@ public class ResourceServerConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
         return new ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter);
     }
-
-
-
 }

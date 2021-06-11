@@ -33,7 +33,6 @@
         </dependency>
 
         <!-- 资源服务器 -->
-
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>

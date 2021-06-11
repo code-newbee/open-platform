@@ -7,10 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 /**
- * 功能描述：
- *
- * @Author: XKK
- * @Date: 2021/6/2 11:04
+ * 白名单配置
  */
 @Data
 @Configuration

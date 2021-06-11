@@ -36,7 +36,7 @@ spring:
           jwk-set-uri: http://localhost:8888/oauth/public_key
 
 # 配置白名单路径
-white-list:
+whitelist:
   urls:
-    - "/lcloud-van-auth/oauth/token"
+    - "/dev-api/lcloud-van-auth/oauth/token"
     - "/lcloud-van-auth/oauth/public_key"
